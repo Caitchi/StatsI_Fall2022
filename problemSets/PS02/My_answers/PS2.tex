@@ -1,0 +1,258 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 2}
+\date{Due: October 16, 2022}
+\author{Applied Stats/Quant Methods 1}
+
+\begin{document}
+	\maketitle
+	\section*{Question 1 (40 points): Political Science}
+	
+	\vspace{.25cm}
+	The following table was created using the data from a study run in a major Latin American city.\footnote{Fried, Lagunes, and Venkataramani (2010). ``Corruption and Inequality at the Crossroad: A Multimethod Study of Bribery and Discrimination in Latin America. \textit{Latin American Research Review}. 45 (1): 76-97.} As part of the experimental treatment in the study, one employee of the research team was chosen to make illegal left turns across traffic to draw the attention of the police officers on shift. Two employee drivers were upper class, two were lower class drivers, and the identity of the driver was randomly assigned per encounter. The researchers were interested in whether officers were more or less likely to solicit a bribe from drivers depending on their class (officers use phrases like, ``We can solve this the easy way'' to draw a bribe). The table below shows the resulting data. \\
+	\vspace{3cm}
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{l | c c c }
+			& Not Stopped & Bribe requested & Stopped/given warning \\
+			\\[-1.8ex] 
+			\hline \\[-1.8ex]
+			Upper class & 14 & 6 & 7 \\
+			Lower class & 7 & 7 & 1 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{enumerate}
+		
+		\newpage
+		
+		\item [(a)]
+		\emph{Calculate the $\chi^2$ test statistic by hand/manually (even better if you can do "by hand" in \texttt{R}).}\\
+		\vspace{.5cm}
+		
+		\noindent
+		H0: The variables are statistically independent. \\
+		H1: The variables are statistically dependent.\\
+		\vspace{.5cm}
+		
+		First, create a matrix of our data and name the rows and columns.
+		\lstinputlisting[language=R, firstline=47, lastline=51]{PS02_Response.R}
+		
+		\begin{verbatim}  
+			Not Stopped     Bribe Requested     Stopped/Given Warning
+			Upper Class          14               6                     7
+			Lower Class           7               7                     1
+		\end{verbatim}
+		\vspace{.5cm}
+		
+		\item Get the marginal distributions.
+		\lstinputlisting[language=R, firstline=56, lastline=60]{PS02_Response.R}
+		\vspace{.5cm}
+		
+		\noindent   
+		Calculate the table of expected values by multiplying the vectors of the margins and dividing by the total number of observations, using       the “t” function take the transpose of the array.\\
+		
+		\begin{verbatim} Not Stopped Bribe Requested Stopped/Given Warning
+			Upper Class        13.5        8.357143              5.142857
+			Lower Class         7.5        4.642857              2.857143
+		\end{verbatim}
+		
+		\lstinputlisting[language=R, firstline=65, lastline=66]{PS02_Response.R}
+		\vspace{.2cm}
+		\begin{verbatim}  
+			[1] 3.791168
+		\end{verbatim}
+		\vspace{.2cm}
+		
+		\noindent We need the square of the difference between the two tables divided by the expected values. The sum of all these values is the Chi-squared statistic:
+		\lstinputlisting[language=R, firstline=70, lastline=71]{PS02_Response.R}
+		\vspace{.5cm}
+		
+		
+		\item [(b)]
+		\emph{Now calculate the p-value from the test statistic you just created (in \texttt{R}).\footnote{Remember frequency should be $>$ 5 for all cells, but let's calculate the p-value here anyway.}  What do you conclude if $\alpha = 0.1$?}\\
+		
+		\noindent Calculate the degrees of freedom.
+		\lstinputlisting[language=R, firstline=87, lastline=88]{PS02_Response.R}
+		
+		\noindent Find the p-value
+		\lstinputlisting[language=R, firstline=91, lastline=92]{PS02_Response.R}
+		
+		\begin{verbatim}
+			[1] 0.1502306
+		\end{verbatim}
+		
+		\noindent If a = 0.1, then a p-value of 0.1502306 (which is greater than 0.10) is considered not significant as p $>$ 0.10, so we fail to reject the null hypothesis.
+		
+		\item [(c)] \emph{Calculate the standardized residuals for each cell and put them in the table below.}
+		\vspace{.5cm}
+		
+		\noindent Use the str() function to see the standardised residuals and then create a table by calling stdres of the chisq.test() function:
+		
+		\lstinputlisting[language=R, firstline=104, lastline=107]{PS02_Response.R}
+		\newpage
+		
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{l | c c c }
+				& Not Stopped & Bribe requested & Stopped/given warning \\
+				\\[-1.8ex] 
+				\hline \\[-1.8ex]
+				Upper class   &  0.3220306 & -1.6419565  &1.5230259  \\
+				\\
+				Lower class & -0.3220306 & 1.6419565  & -1.5230259  \\
+				
+			\end{tabular}
+		\end{table}
+		
+		\vspace{.5cm}
+		\item [(d)] \emph{How might the standardized residuals help you interpret the results?  }
+		
+		\noindent The standardized residual is a measure of the strength of the difference between observed and expected values. It’s a measure of how significant your cells are to the chi-square value. When you compare the cells, the standardized residual makes it easy to see which cells are contributing the most to the value, and which are contributing the least. \\
+		
+		Positive residuals in cells specify a positive association between the corresponding row and column variables. Negative residuals imply negative association between the corresponding row and column variables. \\
+		
+		In this case; 
+		\begin{itemize}
+			\item Upper class drivers were more likely not to be stopped, while lower class drivers were less likely to not be stopped.
+			\item Upper class drivers, if stopped, were less likely to be asked for a bribe, while lower class drivers were more likely to be asked for a bribe. 
+			\item Upper class drivers, if stopped, were more likely to be given a warning, and lower class drivers were less likely to be given a warning. 
+		\end{itemize}
+	\end{enumerate}
+	\newpage
+	
+	\section*{Question 2 (40 points): Economics}
+	Chattopadhyay and Duflo were interested in whether women promote different policies than men.\footnote{Chattopadhyay and Duflo. (2004). ``Women as Policy Makers: Evidence from a Randomized Policy Experiment in India. \textit{Econometrica}. 72 (5), 1409-1443.} Answering this question with observational data is pretty difficult due to potential confounding problems (e.g. the districts that choose female politicians are likely to systematically differ in other aspects too). Hence, they exploit a randomized policy experiment in India, where since the mid-1990s, $\frac{1}{3}$ of village council heads have been randomly reserved for women. A subset of the data from West Bengal can be found at the following link: \url{https://raw.githubusercontent.com/kosukeimai/qss/master/PREDICTION/women.csv}\\
+	
+	\noindent Each observation in the data set represents a village and there are two villages associated with one GP (i.e. a level of government is called "GP"). Figure~\ref{fig:women_desc} below shows the names and descriptions of the variables in the dataset. The authors hypothesize that female politicians are more likely to support policies female voters want. Researchers found that more women complain about the quality of drinking water than men. You need to estimate the effect of the reservation policy on the number of new or repaired drinking water facilities in the villages.
+	\vspace{.5cm}
+	
+	\begin{enumerate}
+		\item [(a)] \emph{State a null and alternative (two-tailed) hypothesis.}
+		\vspace{.5cm}
+		
+		\noindent  
+		H0: The reservation policy has no effect on the number of new or repaired 
+		drinking water facilities in the villages. \\
+		
+		H1: On average, the reservation policy has either a positive or negative effect on the number of new or repaired drinking water facilities in the villages.\\
+		
+		\vspace{.5cm}
+		
+		\newpage
+		\item [(b)] Run a bi-variate regression to test this hypothesis in \texttt{R} (include your code!).
+		
+		\lstinputlisting[language=R, firstline=158, lastline=159]{PS02_Response.R}
+		
+		\begin{verbatim} 
+			Call:
+			lm(formula = water ~ reserved, data = P2)
+			
+			Residuals:
+			Min      1Q  Median      3Q     Max 
+			-23.991 -14.738  -7.865   2.262 316.009 
+			
+			Coefficients:
+			Estimate Std. Error t value Pr(>|t|)    
+			(Intercept)   14.738      2.286   6.446 4.22e-10 ***
+			reserved       9.252      3.948   2.344   0.0197 *  
+			---
+			Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+			
+			Residual standard error: 33.45 on 320 degrees of freedom
+			Multiple R-squared:  0.01688,	Adjusted R-squared:  0.0138 
+			F-statistic: 5.493 on 1 and 320 DF,  p-value: 0.0197
+		\end{verbatim}
+		\vspace{.5cm}
+		
+		\noindent As the resulting p-value of 0.0197 for reserved is less than the usual significance level a = 0.05, we can conclude that our sample data provides enough evidence to reject the null hypothesis that the reservation policy has no effect on the number of new or repaired drinking water facilities on the village. On average, the the reservation policy has either a positive or negative effect on the  number of new or repaired drinking water facilities in the villages.
+		
+		
+		
+		\vspace{.5cm}
+		\item [(c)] \emph{Interpret the coefficient estimate for reservation policy. }
+		
+		\noindent Convert into a data matrix
+		
+		\lstinputlisting[language=R, firstline=174, lastline=175]{PS02_Response.R}
+		
+		\noindent Subset to extract only the coefficient estimates 
+		
+		\lstinputlisting[language=R, firstline=179, lastline=180]{PS02_Response.R}
+		
+		\noindent As the table shows, the coefficient estimate of the reserved variable is 9.252423. \\
+		This positive coefficient indicates that as the value of the independent 
+		variable (reservation policy for women leaders) increases, the mean of the 
+		dependent variable (no. new or repaired drinking water facilities since the policy started) also tends to increase. \\
+		
+		The number of new or repaired drinking water facilities, on average, in a 
+		village with a reservation policy is expected to be 9.25 times more
+		compared to the number f new or repaired drinking water facilities in a 
+		village without a reservation policy.
+		
+		
+	\end{enumerate}
+	
+\end{document}
