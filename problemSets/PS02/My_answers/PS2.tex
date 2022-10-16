@@ -100,45 +100,45 @@
 		First, create a matrix of our data and name the rows and columns.
 		\lstinputlisting[language=R, firstline=47, lastline=51]{PS02_Response.R}
 		
-		\begin{verbatim}  
-			Not Stopped     Bribe Requested     Stopped/Given Warning
-			Upper Class          14               6                     7
-			Lower Class           7               7                     1
-		\end{verbatim}
-		\vspace{.5cm}
-		
-		\item Get the marginal distributions.
-		\lstinputlisting[language=R, firstline=56, lastline=60]{PS02_Response.R}
+		\begin{Verbatim} 
+		Not Stopped     Bribe Requested     Stopped/Given Warning
+Upper Class          14               6                     7
+Lower Class           7               7                     1
+		\end{Verbatim}
 		\vspace{.5cm}
 		
 		\noindent   
-		Calculate the table of expected values by multiplying the vectors of the margins and dividing by the total number of observations, using       the “t” function take the transpose of the array.\\
-		
-		\begin{verbatim} Not Stopped Bribe Requested Stopped/Given Warning
-			Upper Class        13.5        8.357143              5.142857
-			Lower Class         7.5        4.642857              2.857143
-		\end{verbatim}
+		Calculate the table of expected values by multiplying the vectors of the margins and dividing by the total number of observations, using the “t” function take the transpose of the array.\\
 		
 		\lstinputlisting[language=R, firstline=65, lastline=66]{PS02_Response.R}
+		
+		\begin{Verbatim} 
+	     Not Stopped 	Bribe Requested	Stopped/Given Warning
+Upper Class     13.5		8.357143		5.142857
+Lower Class      7.5		4.642857		2.857143
+		\end{Verbatim}
+	\vspace{.2cm}
+		
+		
+		\noindent We need the square of the difference between the two tables divided by the expected values. The sum of all these values is the Chi-squared statistic:
+				\vspace{.2cm}
+		\lstinputlisting[language=R, firstline=72, lastline=73]{PS02_Response.R}
 		\vspace{.2cm}
+		\noindent The $\chi^2$ test statistic is:
 		\begin{verbatim}  
 			[1] 3.791168
 		\end{verbatim}
 		\vspace{.2cm}
 		
-		\noindent We need the square of the difference between the two tables divided by the expected values. The sum of all these values is the Chi-squared statistic:
-		\lstinputlisting[language=R, firstline=70, lastline=71]{PS02_Response.R}
-		\vspace{.5cm}
-		
-		
 		\item [(b)]
 		\emph{Now calculate the p-value from the test statistic you just created (in \texttt{R}).\footnote{Remember frequency should be $>$ 5 for all cells, but let's calculate the p-value here anyway.}  What do you conclude if $\alpha = 0.1$?}\\
 		
 		\noindent Calculate the degrees of freedom.
-		\lstinputlisting[language=R, firstline=87, lastline=88]{PS02_Response.R}
-		
-		\noindent Find the p-value
 		\lstinputlisting[language=R, firstline=91, lastline=92]{PS02_Response.R}
+		\noindent The degrees of freedom = 2
+		
+		\noindent We can now find the p-value
+		\lstinputlisting[language=R, firstline=96, lastline=97]{PS02_Response.R}
 		
 		\begin{verbatim}
 			[1] 0.1502306
@@ -149,10 +149,26 @@
 		\item [(c)] \emph{Calculate the standardized residuals for each cell and put them in the table below.}
 		\vspace{.5cm}
 		
-		\noindent Use the str() function to see the standardised residuals and then create a table by calling stdres of the chisq.test() function:
+		\noindent We calculate the standard residuals by subtracting the expected values from the observation and dividing by the square root of the expected values:
 		
-		\lstinputlisting[language=R, firstline=104, lastline=107]{PS02_Response.R}
-		\newpage
+		\lstinputlisting[language=R, firstline=116, lastline=117]{PS02_Response.R}
+	\begin{Verbatim} 
+            Not Stopped 	Bribe Requested 	Stopped/Given Warning
+Upper Class   0.1360828     	 -0.8153742             0.8189230
+Lower Class  -0.1825742     	  1.0939393            -1.0987005
+\end{Verbatim}
+		
+		\noindent We can check if r agrees using the chisq.test() and str()function and calling the residuals
+		
+		\lstinputlisting[language=R, firstline=78, lastline=78]{PS02_Response.R}
+		
+		\begin{Verbatim} 
+			Pearson's Chi-squared test
+data: driver
+X-squared = 3.7912, df = 2, p-value = 0.1502
+			\end{Verbatim}
+		
+		\lstinputlisting[language=R, firstline=121, lastline=122]{PS02_Response.R}
 		
 		\begin{table}[h]
 			\centering
@@ -160,9 +176,9 @@
 				& Not Stopped & Bribe requested & Stopped/given warning \\
 				\\[-1.8ex] 
 				\hline \\[-1.8ex]
-				Upper class   &  0.3220306 & -1.6419565  &1.5230259  \\
+				Upper class   &  0.0.1360828  & -0.1360828  & 0.8189230  \\
 				\\
-				Lower class & -0.3220306 & 1.6419565  & -1.5230259  \\
+				Lower class & -0.1825742 & 1.0939393   & -1.0987005  \\
 				
 			\end{tabular}
 		\end{table}
@@ -170,16 +186,18 @@
 		\vspace{.5cm}
 		\item [(d)] \emph{How might the standardized residuals help you interpret the results?  }
 		
-		\noindent The standardized residual is a measure of the strength of the difference between observed and expected values. It’s a measure of how significant your cells are to the chi-square value. When you compare the cells, the standardized residual makes it easy to see which cells are contributing the most to the value, and which are contributing the least. \\
+		\noindent  In this dataset, the standardized residuals indicate that more lower class drivers were approached for a bribe than expected (std res slightly greater than 1) , however fewer lower class drivers were stopped and given a warning than  expected. A comparable number of upper and lower class drivers were not stopped at all when then numbers in each class are accounted for (std res 
+		 close to 0). 
 		
-		Positive residuals in cells specify a positive association between the corresponding row and column variables. Negative residuals imply negative association between the corresponding row and column variables. \\
+		 Fewer bribes than expected were solicited from upper class individuals,  
+		 however more than expected were stopped and given a warning. However, the absolute value of the standardized residuals in these cells were less than 1 
+		 and so not considered significant. 
 		
-		In this case; 
-		\begin{itemize}
-			\item Upper class drivers were more likely not to be stopped, while lower class drivers were less likely to not be stopped.
-			\item Upper class drivers, if stopped, were less likely to be asked for a bribe, while lower class drivers were more likely to be asked for a bribe. 
-			\item Upper class drivers, if stopped, were more likely to be given a warning, and lower class drivers were less likely to be given a warning. 
-		\end{itemize}
+		 Overall the most significant contributor to the chi squared test were lower 
+		 class drivers being asked for bribes and lower class drivers stopped and given 
+		 a warning. However, the relatively small values for the standardized residuals
+		 support our rejection of the alternate hypothesis that these variables are 
+		 dependent and do support the adoption of the null hypothesis. 
 	\end{enumerate}
 	\newpage
 	
@@ -200,11 +218,11 @@
 		H1: On average, the reservation policy has either a positive or negative effect on the number of new or repaired drinking water facilities in the villages.\\
 		
 		\vspace{.5cm}
-		
 		\newpage
+		
 		\item [(b)] Run a bi-variate regression to test this hypothesis in \texttt{R} (include your code!).
 		
-		\lstinputlisting[language=R, firstline=158, lastline=159]{PS02_Response.R}
+		\lstinputlisting[language=R, firstline=170, lastline=171]{PS02_Response.R}
 		
 		\begin{verbatim} 
 			Call:
@@ -227,20 +245,28 @@
 		\end{verbatim}
 		\vspace{.5cm}
 		
-		\noindent As the resulting p-value of 0.0197 for reserved is less than the usual significance level a = 0.05, we can conclude that our sample data provides enough evidence to reject the null hypothesis that the reservation policy has no effect on the number of new or repaired drinking water facilities on the village. On average, the the reservation policy has either a positive or negative effect on the  number of new or repaired drinking water facilities in the villages.
+		\noindent As the resulting p-value of 0.0197 for reserved is less than the usual significance level a = 0.05, we can conclude that our sample data provides enough evidence to reject the null hypothesis that the reservation policy has no effect on the number of new or repaired drinking water facilities on the village. On average, the reservation policy has either a positive or negative effect on the  number of new or repaired drinking water facilities in the villages.
 		
-		
+		\newpage
 		
 		\vspace{.5cm}
 		\item [(c)] \emph{Interpret the coefficient estimate for reservation policy. }
 		
 		\noindent Convert into a data matrix
 		
-		\lstinputlisting[language=R, firstline=174, lastline=175]{PS02_Response.R}
+		\lstinputlisting[language=R, firstline=186, lastline=187]{PS02_Response.R}
+	
 		
 		\noindent Subset to extract only the coefficient estimates 
 		
-		\lstinputlisting[language=R, firstline=179, lastline=180]{PS02_Response.R}
+		\lstinputlisting[language=R, firstline=191, lastline=192]{PS02_Response.R}
+		
+\begin{Verbatim}
+	     Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept) 14.738318   	2.286300 	6.446363	4.216474e-10
+reserved     9.252423   	3.947746 	2.343723	1.970398e-02
+			
+		\end{Verbatim}
 		
 		\noindent As the table shows, the coefficient estimate of the reserved variable is 9.252423. \\
 		This positive coefficient indicates that as the value of the independent 
