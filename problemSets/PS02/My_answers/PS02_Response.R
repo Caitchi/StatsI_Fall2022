@@ -100,8 +100,8 @@ p_value
 # If a = 0.1, then a p-value of 0.1502306 (which is greater than 0.10) 
 # is considered not significant as p > 0.10, so we fail to reject the null hypothesis. 
 
-# Check if this is valid -> one tailed test and not two tailed so don't
-# need to divide by 2
+# 
+# 
 
 
 ### 
