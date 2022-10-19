@@ -5,6 +5,8 @@
 ## Packages
 library(tidyverse) # Load our packages here
 library(broom) # If not installed - function for installing?
+install.packages("broom")
+
 
 ?tidyverse
 browseVignettes(package = "tidyverse")
@@ -17,6 +19,7 @@ browseVignettes(package = "tidyverse")
 # we can read in a csv file using the read_csv() function, which is 
 # similar to base R's read.csv() function.
 dat <- read.csv("movies.csv")
+tidy_dat <- read_csv("movies.csv")
 
 ##########
 # Exercise
@@ -25,6 +28,12 @@ dat <- read.csv("movies.csv")
 # Change the above code to use readr's read_csv() function. Assign
 # the output to a different object. What do you notice is different 
 # about the two functions?
+
+dat
+tidy_dat
+
+class(dat)
+class(tidy_dat) # it IS a dataframe 
 
 vignette("tibble")
 
@@ -42,11 +51,14 @@ filter(dat, title_type == "Feature Film")
 
 ## (Selecting or mutating on) columns
 select(dat, thtr_rel_month)
-mutate(dat, rel_mon = month.abb[thtr_rel_month])
+mutate(dat, rel_mon = month.abb[thtr_rel_month]) # Transforming the numbers into 
+                                                 # 3 letter abbreviations
 
 ## Group by and summarise into a single row
 by_month <- group_by(dat, thtr_rel_month)
-summarise(by_month, n = n())
+summarise(by_month, n = n()) # frequency of releases by each month
+
+by_month 
 
 ##########
 # The pipe
@@ -76,9 +88,26 @@ dat %>%
 # column. Which is the most popular month for Horror films to be 
 # released?
 
+dat %>%
+  filter(genre == "Horror") %>% # filter on the rows
+  select(thtr_rel_month) %>% # select one column
+  mutate(month = month.abb[thtr_rel_month]) %>% # change to month abbreviation
+  group_by(month) %>% # group data by month
+  summarise(n = n()) %>% # perform a summary operation (count the n per month)
+  arrange(desc(n)) # sort in descending order
+
 
 # 2. Using the dplyr commands you have learned, find the actor 
 # (actor1) with the most award wins. 
+
+by_actor <- group_by(dat, actor1)
+summarise(by_actor, n = n()) # frequency of releases by each month
+
+dat %>%
+  filter(best_actor_win == "yes") %>% # filter on the rows
+  group_by(actor1) %>% # group data by month
+  summarise(n = n()) %>% # perform a summary operation (count the n per month)
+  arrange(desc(n)) # sort in descending order
 
 
 #######################
@@ -106,6 +135,14 @@ dat %>%
 
 # Using the code above as a template, perform the same operation on 
 # a subset of horror films
+
+dat %>%  
+  filter(genre == "Horror") %>%
+  mutate(month = month.abb[thtr_rel_month]) %>% 
+  group_by(month) %>% 
+  summarise(n = n()) %>%
+  mutate(prop_month = round(n / sum(n), 3)) %>% # change decimal to 3 to avoid alphabetical order of same
+  arrange(desc(prop_month))
 
 
 #############
@@ -154,4 +191,57 @@ dat %>%
 # Are feature films getting longer? Use the dplyr functions you've 
 # learned about today to find out whether the average running time 
 # of feature films has increased in recent years.
+
+# How do we find out th names of the long films in 1998?
+
+dat %>%
+  filter(thtr_rel_year > 1995 & thtr_rel_year < 1999) %>%
+  filter(runtime > 120) %>%
+  select(title, runtime, thtr_rel_year) %>%
+  arrange(desc(runtime))
+
+
+# What is the avg. runtime of a film that wins the most awards?
+
+dat %>%
+  filter(best_pic_win == "yes") %>%
+  summarise(mean_runtime = mean(runtime),
+            n = n(), 
+            sd = sd(runtime))
+
+dat %>%
+  summarise(mean_runtime = mean(runtime, na.rm = TRUE),
+            n = n(),
+            sd = sd(runtime, na.rm = TRUE))
+
+# Is it statistically significant? 
+
+# To compare two means we need 
+# 1. Two means: 105.8215 and 143.2857
+# 2. Sample sizes: 651 and 7 
+# 3. Standard deviations: 43.71 and 19.44505
+
+
+# standard error = sd / sqrt(n-1)
+
+nrow(dat)
+
+nrow(is.na(dat$runtime))
+
+which(is.na(dat$runtime) == TRUE)
+
+# only 7 variables so we perform a t-test 
+
+# H1: Films that win are longer
+# H0: Length of film does not effect whether it will win an award
+
+
+
+
+
+
+
+
+
+
 
