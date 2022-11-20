@@ -223,6 +223,6 @@ stargazer(Diff_Presvote_Voteshare_Reg, type = "latex", out = "Q5.latex", title =
 # In Q5, we are essentially showing the same thing in a different way, by running 
 # a regression of voteshare against difflog AND presvote, we can see how much of the unexplained 
 # variance in voteshare ~ difflog is explained by presvote, and this means that the 
-# Residual Std. Error will be the same 
+# Residual Std. Error will be the same. 
 
 
