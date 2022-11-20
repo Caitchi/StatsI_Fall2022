@@ -75,7 +75,7 @@ ggplot(inc.sub, aes(x = difflog, y = voteshare)) +
 
 inc.sub$residuals <- residuals(Diff_Vote_Reg) # Save the residual values
 Voteshare_res <- inc.sub$residuals
-head(Voteshare_res) # check that resduals have been correctly assigned to the new object
+head(Voteshare_res) # check that residuals have been correctly assigned to the new object
 
 # 4. Write the prediction equation.
 
@@ -216,8 +216,13 @@ stargazer(Diff_Presvote_Voteshare_Reg, type = "latex", out = "Q5.latex", title =
 # The Residual Std. Error	in the output for this question is identical to the 
 # Residual Std. Error	in the output for Q4. 
 
-# This is because on average, when x = 0, my predicted value 
-# (expected value of y should be equal to beta0 (intercept). 
+# This is because running a regression of the residuals of voteshare ~ difflog against 
+# the residuals of presvote ~ difflog as we do in Q4, tells us how much of the unexplained 
+# variation in voteshare is influenced by presvote. 
 
+# In Q5, we are essentially showing the same thing in a different way, by running 
+# a regression of voteshare against difflog AND presvote, we can see how much of the unexplained 
+# variance in voteshare ~ difflog is explained by presvote, and this means that the 
+# Residual Std. Error will be the same 
 
 
