@@ -98,6 +98,7 @@ prestige = 21.142 + (0.003*income) + (37.781*professional) + (-0.002*37.7812800*
 prestige_1000increase = 21.142 + (0.003*1000) + (37.781*1) + (-0.002*37.7812800*0.0031709)
 prestige_1000increase
 
+
 # (g) What is the effect of changing one's occupations from non-professional to professional
 # when her income is $6,000? We are interested in the marginal effect of professional
 # jobs when the variable income takes the value of 6; 000. Calculate the change in ^y
@@ -137,17 +138,17 @@ t1 <- 0.042 / 0.016
 t1
 
 # get critical value at 0.05
-n1 <- 30
+n1 <- 131
 
-degreesf <- n1 - 2 
+degreesf <- n1 - 3 
 degreesf
 
-p_value <- 2*pt(abs(t1), n1-2, lower.tail = F)
-p_value
+p_value1 <- 2*pt(abs(t1), n1-3, lower.tail = F)
+p_value1
 
-# Since t1 of 2.625 is greater than p value of 0.01, we fail to reject the null 
+# Since p value of 0.0097 is less than our significance level of 0.05, we reject the null 
 # hypothesis that the slope of the regression line for the effect of living in a precinct 
-# assigned lawn signs on proportion of vote to Ken Cuccinelli  = 0 at a 0.05% significance level. 
+# assigned lawn signs on proportion of vote to Ken Cuccinelli  = 0. 
 
 # (b) Use the results to determine whether being next to precincts with these yard signs
 # affects vote share (e.g., conduct a hypothesis test with a = .05).
@@ -165,17 +166,17 @@ t2 <- 0.042 / 0.013
 t2
 
 # get critical value at 0.05
-n2 <- 76
+n2 <- 131
 
-degreesf <- n2 - 2 
+degreesf <- n2 - 3 
 degreesf
 
-p_value <- 2*pt(abs(t2), n2-2, lower.tail = F)
-p_value
+p_value2 <- 2*pt(abs(t2), n2-3, lower.tail = F)
+p_value2
 
-# Since t2 of 3.231 is greater than p value of 0.002, we fail to reject the null 
+# Since our p value of 0.002 is greater than our significance level of 0.05, we reject the null 
 # hypothesis that the slope of the regression line for the effect of living in a precinct 
-# adjacent to lawn signs on proportion of vote to Ken Cuccinelli = 0 at a 0.05% significance level. 
+# adjacent to lawn signs on proportion of vote to Ken Cuccinelli = 0. 
 
 # (c) Interpret the coefficient for the constant term substantively.
 
@@ -187,8 +188,27 @@ p_value
 # (d) Evaluate the model fit for this regression. What does this tell us about the importance
 # of yard signs versus other factors that are not modeled?
 
-# The R^2 for this model is 0.094. This low R^2 value tells us that compared to other factors not 
-# modeled in this regression, yard signs have little impact on proportion of vote going to the opponent. 
+
+# H0: all regression coefficients are equal to zero
+# H1: At least one regression coefficient is not equal to zero
+
+# R^2 = 0.094. 
+
+F.test <- (R.squared / (k - 1)) / ((1 - R.squared) / ( n - k))
+F.test <- (0.094 / (3 - 1)) / ((1 - 0.094) / ( 131 - 3))
+F.test
+
+df1 <- 3 - 1
+df2 <- 128
+F.pvalue <- pf(F.test, df1, df2)
+
+F.pvalue 
+
+# A p-value of 0.9981961 is less than our significance level of 0.05, which means that we can reject our null hypothesis that all of the co-variates are equal to zero
+# and our alternate hypothesis that at least one of the co-variates has a linear relationship with our outcome is supported, but it is of note that this does not tell us which one, or directionality. 
+# However, we can conclude from this test that compared to other factors not modeled in this regression, yard signs do have some impact 
+# on proportion of vote going to the opponent Ken Cuccinelli. 
+
 
 
 
